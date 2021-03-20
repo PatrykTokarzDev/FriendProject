@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class avatarMovement : MonoBehaviour
 {
+
     //variable declaration
+    public Vector2 speed2 = new Vector2(30, 30);
     private float speed = 10;
-    public float jumpHeight = 5;
+    public float jumpHeight = 50;
     Rigidbody2D rb;
 
 
@@ -19,6 +21,7 @@ public class avatarMovement : MonoBehaviour
 
 
         rb = transform.GetComponent<Rigidbody2D>();
+
     }
 
     /// <summary>
@@ -28,16 +31,20 @@ public class avatarMovement : MonoBehaviour
     /// </summary>
     void Update()
     {
+
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
-        Vector2 movement = new Vector2(horizontal, 0);
+        Vector2 movement = new Vector2(horizontal*speed2.x, 0);
 
-        rb.AddForce(movement * speed);
+        //rb.AddForce(movement * speed);
+
+        movement *= Time.deltaTime;
+        transform.Translate(movement);
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            rb.velocity = Vector2.up * jumpHeight;
+            transform.Translate(Vector2.up * jumpHeight * Time.deltaTime, Space.World);
         }
 
 
