@@ -42,7 +42,7 @@ public class avatarMovement : MonoBehaviour
         movement *= Time.deltaTime;
         transform.Translate(movement);
 
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Input.GetAxis("Jump") > 0)
         {
             transform.Translate(Vector2.up * jumpHeight * Time.deltaTime, Space.World);
         }
