@@ -9,9 +9,15 @@ public class avatarMovement : MonoBehaviour
     private Vector2 speed2 = new Vector2(30, 30);
     private float speed = 5f;
     private float jumpHeight = 50;
+    private float gravity = 1.625f;
+    private float velY = 0;
+    private bool isGrounded = false;
     Rigidbody2D rb;
 
     private float MovementSmoothing = 0.001f; //FOR OPTION 2 THIS VARIABLE IS WHAT TO CHANGE TO ADD MOMENTUM, THE LOWER THE NUMBER THE LESS MOMENTUM BUT DO NOT PUT IT TO 0 OR ABOVE 1 
+    [SerializeField] Transform groundCheck; // FOR OPTION 2
+    [SerializeField] float groundDist = 0.11f; // FOR OPTION 2
+    [SerializeField] LayerMask groundMask; // FOR OPTION 2
     private Vector3 velMove = Vector3.zero;
 
     /// <summary>
@@ -48,7 +54,17 @@ public class avatarMovement : MonoBehaviour
         ///
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
-        Vector3 targetVelocity = new Vector2(horizontal * 10f, rb.velocity.y);
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundDist, groundMask);
+        if (isGrounded)
+        {
+            velY = 0;
+        }
+        else
+        {
+            velY -= gravity;
+            print(velY);
+        }
+        Vector3 targetVelocity = new Vector2(horizontal * speed, velY);
         rb.velocity = Vector3.SmoothDamp(rb.velocity, targetVelocity, ref velMove, MovementSmoothing);
 
 
