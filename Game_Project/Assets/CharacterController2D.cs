@@ -69,7 +69,7 @@ public class CharacterController2D : MonoBehaviour
 
         foreach (Collider2D hit in hits)
         {
-            // Ignore our own collider.
+            
             if (hit == boxCollider)
                 continue;
 
