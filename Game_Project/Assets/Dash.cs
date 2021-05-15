@@ -4,52 +4,46 @@ using UnityEngine;
 
 public class Dash : MonoBehaviour
 {
-    public DashState dashState;
-     public float dashTimer;
-     public float maxDash = 20f;
- 
-     public Vector2 savedVelocity;
 
-    [SerializeField]
+
+    //systems references
     Rigidbody2D rb;
-     void Update () 
+
+    //handling
+    public Vector2 savedVelocity;
+    public float dashSpeed;
+    private float dashTime;
+    private float startDashTime;
+    private int direction;
+    
+
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        dashTime = startDashTime;
+            
+    }
+
+    void Update () 
      {
-         switch (dashState) 
-         {
-         case DashState.Ready:
-             var isDashKeyDown = Input.GetKeyDown (KeyCode.LeftShift);
-             if(isDashKeyDown)
-             {
-                 savedVelocity = rb.velocity;
-                    rb.velocity =  new Vector2(rb.velocity.x * 3f, rb.velocity.y);
-                 dashState = DashState.Dashing;
-             }
-             break;
-         case DashState.Dashing:
-             dashTimer += Time.deltaTime * 3;
-             if(dashTimer >= maxDash)
-             {
-                 dashTimer = maxDash;
-                    rb.velocity = savedVelocity;
-                 dashState = DashState.Cooldown;
-             }
-             break;
-         case DashState.Cooldown:
-             dashTimer -= Time.deltaTime;
-             if(dashTimer <= 0)
-             {
-                 dashTimer = 0;
-                 dashState = DashState.Ready;
-             }
-             break;
-         }
-     }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            StartCoroutine(dashCoolDown());
+        }
+       
+    }
+
+
+    private IEnumerator dashCoolDown()
+    {
+        rb.velocity = Vector2.left * dashSpeed;
+        yield return new WaitForSeconds(1);
+        rb.velocity = Vector2.zero;
+
+    }
  }
  
- public enum DashState 
- {
-     Ready,
-     Dashing,
-     Cooldown
- }
+ 
 
